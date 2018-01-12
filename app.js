@@ -3,47 +3,18 @@ const fs=require('fs');
 let getFileData=require('./lib/utils.js').getFileData;
 let getMIMEType=require('./lib/utils.js').getMIMEType;
 let app=webApp.create();
+let requestFileHandler=(req,res)=>{
+  let fileName=`./public${req.url}`;
+  let fileData=getFileData(fs,fileName);
+  res.setHeader('Content-Type',getMIMEType(req.url));
+  res.write(fileData);
+  res.end();
+};
 app.get('/',(req,res)=>res.redirect('/login.html'));
-app.get('/login.html',(req,res)=>{
-  let fileName=`./public${req.url}`;
-  let fileData=getFileData(fs,fileName);
-  res.setHeader('Content-Type',getMIMEType(req.url));
-  res.write(fileData);
-  res.end();
-});
-app.get('/addTodo.html',(req,res)=>{
-  let fileName=`./public${req.url}`;
-  let fileData=getFileData(fs,fileName);
-  res.setHeader('Content-Type',getMIMEType(req.url));
-  res.write(fileData);
-  res.end();
-});
-app.get('/editTodo.html',(req,res)=>{
-  let fileName=`./public${req.url}`;
-  let fileData=getFileData(fs,fileName);
-  res.setHeader('Content-Type',getMIMEType(req.url));
-  res.write(fileData);
-  res.end();
-});
-app.get('/editTodoItem.html',(req,res)=>{
-  let fileName=`./public${req.url}`;
-  let fileData=getFileData(fs,fileName);
-  res.setHeader('Content-Type',getMIMEType(req.url));
-  res.write(fileData);
-  res.end();
-});
-app.get('/homepage.html',(req,res)=>{
-  let fileName=`./public${req.url}`;
-  let fileData=getFileData(fs,fileName);
-  res.setHeader('Content-Type',getMIMEType(req.url));
-  res.write(fileData);
-  res.end();
-});
-app.get('/viewTodo.html',(req,res)=>{
-  let fileName=`./public${req.url}`;
-  let fileData=getFileData(fs,fileName);
-  res.setHeader('Content-Type',getMIMEType(req.url));
-  res.write(fileData);
-  res.end();
-});
+app.get('/login.html',requestFileHandler);
+app.get('/addTodo.html',requestFileHandler);
+app.get('/editTodo.html',requestFileHandler);
+app.get('/editTodoItem.html',requestFileHandler);
+app.get('/homepage.html',requestFileHandler);
+app.get('/viewTodo.html',requestFileHandler);
 module.exports=app;
