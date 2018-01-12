@@ -62,5 +62,8 @@ app.post('/login.html', (req, res) => {
   user.sessionid = sessionid;
   res.redirect('/homepage.html');
 });
-
+app.get('/logout',(req,res)=>{
+  res.setHeader('Set-Cookie', `sessionid=0; Expires=${new Date(1).toUTCString()}`);
+  res.redirect('/login.html');
+});
 module.exports = app;
