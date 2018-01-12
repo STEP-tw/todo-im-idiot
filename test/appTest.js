@@ -37,4 +37,49 @@ describe('app',()=>{
       })
     })
   })
+  describe('GET /addTodo.html',()=>{
+    it('gives the addTodo page',done=>{
+      request(app,{method:'GET',url:'/addTodo.html'},res=>{
+        status_is_ok(res);
+        content_type_is(res,'text/html');
+        done();
+      })
+    })
+  })
+  describe('GET /editTodo.html',()=>{
+    it('gives the editTodo page',done=>{
+      request(app,{method:'GET',url:'/editTodo.html'},res=>{
+        status_is_ok(res);
+        content_type_is(res,'text/html');
+        done();
+      })
+    })
+  })
+  describe('GET /editTodoItem.html',()=>{
+    it('gives the editTodoItem page',done=>{
+      request(app,{method:'GET',url:'/editTodoItem.html'},res=>{
+        status_is_ok(res);
+        content_type_is(res,'text/html');
+        done();
+      })
+    })
+  })
+  describe('GET /homepage.html',()=>{
+    it('gives the homepage page',done=>{
+      request(app,{method:'GET',url:'/homepage.html'},res=>{
+        status_is_ok(res);
+        content_type_is(res,'text/html');
+        done();
+      })
+    })
+  })
+  describe('GET /viewTodo.html',()=>{
+    it('gives the viewTodo page',done=>{
+      request(app,{method:'GET',url:'/viewTodo.html'},res=>{
+        status_is_ok(res);
+        content_type_is(res,'text/html');
+        done();
+      })
+    })
+  })
 })

@@ -11,4 +11,39 @@ app.get('/login.html',(req,res)=>{
   res.write(fileData);
   res.end();
 });
+app.get('/addTodo.html',(req,res)=>{
+  let fileName=`./public${req.url}`;
+  let fileData=getFileData(fs,fileName);
+  res.setHeader('Content-Type',getMIMEType(req.url));
+  res.write(fileData);
+  res.end();
+});
+app.get('/editTodo.html',(req,res)=>{
+  let fileName=`./public${req.url}`;
+  let fileData=getFileData(fs,fileName);
+  res.setHeader('Content-Type',getMIMEType(req.url));
+  res.write(fileData);
+  res.end();
+});
+app.get('/editTodoItem.html',(req,res)=>{
+  let fileName=`./public${req.url}`;
+  let fileData=getFileData(fs,fileName);
+  res.setHeader('Content-Type',getMIMEType(req.url));
+  res.write(fileData);
+  res.end();
+});
+app.get('/homepage.html',(req,res)=>{
+  let fileName=`./public${req.url}`;
+  let fileData=getFileData(fs,fileName);
+  res.setHeader('Content-Type',getMIMEType(req.url));
+  res.write(fileData);
+  res.end();
+});
+app.get('/viewTodo.html',(req,res)=>{
+  let fileName=`./public${req.url}`;
+  let fileData=getFileData(fs,fileName);
+  res.setHeader('Content-Type',getMIMEType(req.url));
+  res.write(fileData);
+  res.end();
+});
 module.exports=app;
