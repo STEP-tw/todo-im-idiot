@@ -125,7 +125,7 @@ describe('app', () => {
       request(app, {
         method: 'POST',
         url: '/login.html',
-        body: 'userName=salmans'
+        body: 'username=salmans'
       }, res => {
         should_be_redirected_to(res, '/homepage.html');
         should_not_have_cookie(res, 'message');
@@ -136,7 +136,7 @@ describe('app', () => {
       request(app, {
         method: 'POST',
         url: '/login.html',
-        body: 'userName=badUser'
+        body: 'username=badUser'
       }, res => {
         should_be_redirected_to(res, '/login.html');
         should_have_expiring_cookie(res, 'logInFailed', 'true');
@@ -152,6 +152,20 @@ describe('app', () => {
       }, res => {
         should_be_redirected_to(res, '/login.html');
         should_not_have_cookie(res,'sessionId');
+        done();
+      })
+    })
+  })
+  describe('POST /addTodo.html', () => {
+    it('redirects to homepage for after adding Todo List', done => {
+      request(app, {
+        method: 'POST',
+        url: '/addTodo.html',
+        body:
+          "title=salman&description=dude&item1=1&item2=2&item3=3&item4=4&item5=5&item6=6&item7=7&item8=8&item9=9&item10=0"
+      }, res => {
+        should_be_redirected_to(res, '/homepage.html');
+        should_not_have_cookie(res, 'message');
         done();
       })
     })

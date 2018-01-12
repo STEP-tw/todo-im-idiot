@@ -4,6 +4,7 @@ let getFileData = require('./lib/utils.js').getFileData;
 let getMIMEType = require('./lib/utils.js').getMIMEType;
 let getDateAndTimeInArray = require('./lib/utils.js').getDateAndTimeInArray;
 let timeStamp= require('./lib/time.js').timeStamp;
+let parseData=require('./lib/utils.js').parseData;
 let validUsers = [{
   name: "salmans",
   Fullname: "Salman Shaik"
@@ -16,6 +17,7 @@ let validUsers = [{
   name: "vivekh",
   Fullname: "Vivek Haridas"
 }];
+let todoList=JSON.parse(fs.readFileSync('./data/todoList.json'));
 let requestFileHandler = (req, res) => {
   console.log(getGETRequests(req.url));
   let fileName = `./public${req.url}`;
@@ -55,21 +57,36 @@ app.get('/editTodo.html', requestFileHandler);
 app.get('/editTodoItem.html', requestFileHandler);
 app.get('/homepage.html', requestFileHandler);
 app.get('/viewTodo.html', requestFileHandler);
+app.get('/js/addTodo.js', requestFileHandler);
+app.get('/logout',(req,res)=>{
+  res.setHeader('Set-Cookie', `user='';Expires=${new Date(1).toUTCString()}`);
+  res.redirect('/login.html');
+});
 app.post('/login.html', (req, res) => {
   console.log(getPOSTRequests(req.url));
-  let user = validUsers.find(u => u.name == req.body.userName);
+  let user = validUsers.find(u => u.name == req.body.username);
   if (!user) {
     res.setHeader('Set-Cookie', `logInFailed=true; Max-Age=5`);
     res.redirect('/login.html');
     return;
   }
   let sessionid = new Date().getTime();
-  res.setHeader('Set-Cookie', `sessionid=${sessionid}`);
+  res.setHeader('Set-Cookie', `user=${req.body.username}`);
   user.sessionid = sessionid;
   res.redirect('/homepage.html');
 });
-app.get('/logout',(req,res)=>{
-  res.setHeader('Set-Cookie', `sessionid=0; Expires=${new Date(1).toUTCString()}`);
-  res.redirect('/login.html');
+
+app.post('/addTodo.html', (req, res) => {
+  console.log(getPOSTRequests(req.url));
+  req.body.title=parseData(req.body.title);
+  req.body.description=parseData(req.body.description);
+  for (var i = 1; i < 11; i++) {
+    req.body[`item${i}`]=parseData(req.body[`item${i}`]);
+  }
+  console.log(req.cookies.user);
+  if(todoList[req.cookies.user]==undefined) todoList[req.cookies.user]=[];
+  todoList[req.cookies.user].push(req.body);
+  fs.writeFileSync('./data/todoList.json',toS(todoList));
+  res.redirect('/homepage.html');
 });
 module.exports = app;
