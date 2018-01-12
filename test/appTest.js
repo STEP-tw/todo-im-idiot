@@ -9,6 +9,20 @@ const should_be_redirected_to = (res,location)=>{
 const status_is_ok = (res)=>assert.equal(res.statusCode,200);
 const content_type_is = (res,expected)=> assert.equal(res.headers['Content-Type'],expected);
 const body_contains = (res,text)=> assert.isOk(res.body.includes(text),`missing ${text}`);
+const should_not_have_cookie = (res,name)=> {
+  let cookieText = res.headers['Set-Cookie']||'';
+  assert.notInclude(cookieText,`${name}=`);
+};
+const should_have_cookie = (res,name,value)=> {
+  console.log(res.headers);
+  let cookieText = res.headers['Set-Cookie'];
+  assert.include(cookieText,`${name}=${value}`);
+};
+const should_have_expiring_cookie = (res,name,value)=> {
+  console.log(res.headers);
+  let cookieText = res.headers['Set-Cookie'];
+  assert.include(cookieText,`${name}=${value}; Max-Age=5`);
+};
 describe('app',()=>{
   describe('GET /bad',()=>{
     it('responds with 404',done=>{
@@ -82,4 +96,20 @@ describe('app',()=>{
       })
     })
   })
-})
+  describe('POST /login.html',()=>{
+    it('redirects to homepage for valid user',done=>{
+      request(app,{method:'POST',url:'/login.html',body:'userName=salmans'},res=>{
+        should_be_redirected_to(res,'/homepage.html');
+        should_not_have_cookie(res,'message');
+        done();
+      })
+    })
+    it('redirects to login.html with message for invalid user',done=>{
+      request(app,{method:'POST',url:'/login.html',body:'userName=badUser'},res=>{
+        should_be_redirected_to(res,'/login.html');
+        should_have_expiring_cookie(res,'logInFailed','true');
+        done();
+      })
+    })
+    })
+  })
