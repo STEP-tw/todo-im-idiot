@@ -4,26 +4,18 @@
 <head>
   <meta charset="utf-8">
   <title>ADD TODO</title>
+  <script src="js/addTodo.js" charset="utf-8"></script>
 </head>
 
 <body>
   <h1>ADD TODO</h1>
-  <form method="post" name="addTodo">
-    <label for="title">Title:</label> <input type="text" name="title" required><br />
-    <label for="description">Description:</label> <textarea name="description" rows="5" cols="40"></textarea><br />
-    <label for="items">Items:</label><br/>
-    <input type="text" name="item1"><br />
-    <input type="text" name="item2"><br />
-    <input type="text" name="item3"><br />
-    <input type="text" name="item4"><br />
-    <input type="text" name="item5"><br />
-    <input type="text" name="item6"><br />
-    <input type="text" name="item7"><br />
-    <input type="text" name="item8"><br />
-    <input type="text" name="item9"><br />
-    <input type="text" name="item10"><br />
-    <input type="submit" value="SAVE"><br />
-  </form>
+    <div class="" id="itemsBlock">
+      <label for="title">Title:</label> <input type="text" name="title" required><br />
+      <label for="description">Description:</label> <textarea name="description" rows="5" cols="40"></textarea><br />
+      <input type="submit" value="✚ ADD ITEM" onclick="addTextBox('itemsBlock')"><br />
+      <label for="items">Items:</label>
+    </div>
+    <input type="submit" value="SAVE" onclick="sendDataToServer()"><br />
 </body>
 
 </html>

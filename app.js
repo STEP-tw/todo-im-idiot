@@ -26,7 +26,20 @@ let requestFileHandler = (req, res) => {
   res.write(fileData);
   res.end();
 };
+const getTodosInTable=(todos)=>{
+  let table="<table>";
+  todos.forEach((element)=>{
+    table+="<tr>";
+    table+=`<td>${element.date}</td>`;
+    table+=`<td class="todoinfo"><p><h4>${element.title}</h4><br />${element.description}</p></td>`;
+    table+='<td><a href="/delete">DELETE</a></td>';
+    table+="</tr>";
+  });
+  table+="</table>";
+  return table;
+};
 const loginHandler=(req,res)=>{
+  console.log(getGETRequests(req.url));
   let fileName = `./public${req.url}`;
   let fileData = getFileData(fs, fileName).toString();
   res.setHeader('Content-Type', getMIMEType(req.url));
@@ -58,6 +71,7 @@ app.get('/editTodoItem.html', requestFileHandler);
 app.get('/homepage.html', requestFileHandler);
 app.get('/viewTodo.html', requestFileHandler);
 app.get('/js/addTodo.js', requestFileHandler);
+app.get('/css/master.css', requestFileHandler);
 app.get('/logout',(req,res)=>{
   res.setHeader('Set-Cookie', `user='';Expires=${new Date(1).toUTCString()}`);
   res.redirect('/login.html');
@@ -78,15 +92,16 @@ app.post('/login.html', (req, res) => {
 
 app.post('/addTodo.html', (req, res) => {
   console.log(getPOSTRequests(req.url));
+  req.body.date=getDateAndTimeInArray().replace('[', '').replace(']', '');
   req.body.title=parseData(req.body.title);
   req.body.description=parseData(req.body.description);
   for (var i = 1; i < 11; i++) {
-    req.body[`item${i}`]=parseData(req.body[`item${i}`]);
+    if(req.body[`item${i}`]!=undefined)
+     req.body[`item${i}`]=parseData(req.body[`item${i}`]);
   }
-  console.log(req.cookies.user);
   if(todoList[req.cookies.user]==undefined) todoList[req.cookies.user]=[];
   todoList[req.cookies.user].push(req.body);
   fs.writeFileSync('./data/todoList.json',toS(todoList));
-  res.redirect('/homepage.html');
+  
 });
 module.exports = app;
