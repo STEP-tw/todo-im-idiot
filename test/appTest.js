@@ -14,12 +14,10 @@ const should_not_have_cookie = (res, name) => {
   assert.notInclude(cookieText, `${name}=`);
 };
 const should_have_cookie = (res, name, value) => {
-  console.log(res.headers);
   let cookieText = res.headers['Set-Cookie'];
   assert.include(cookieText, `${name}=${value}`);
 };
 const should_have_expiring_cookie = (res, name, value) => {
-  console.log(res.headers);
   let cookieText = res.headers['Set-Cookie'];
   assert.include(cookieText, `${name}=${value}; Max-Age=5`);
 };
@@ -120,6 +118,18 @@ describe('app', () => {
       })
     })
   })
+  describe('GET /editTodos.html', () => {
+    it('gives the editTodos page', done => {
+      request(app, {
+        method: 'GET',
+        url: '/editTodos.html'
+      }, res => {
+        status_is_ok(res);
+        content_type_is(res, 'text/html');
+        done();
+      })
+    })
+  })
   describe('POST /login.html', () => {
     it('redirects to homepage for valid user', done => {
       request(app, {
@@ -157,7 +167,7 @@ describe('app', () => {
     })
   })
   describe('POST /addTodo.html', () => {
-    it('redirects to homepage for after adding Todo List', done => {
+    it('redirects to homepage for after adding Todo List', () => {
       request(app, {
         method: 'POST',
         url: '/addTodo.html',
@@ -166,7 +176,32 @@ describe('app', () => {
       }, res => {
         should_be_redirected_to(res, '/homepage.html');
         should_not_have_cookie(res, 'message');
-        done();
+      })
+    })
+  })
+  describe('POST /editTodos.html', () => {
+    it('redirects to editTodo for after clicking on Todo List', () => {
+      request(app, {
+        method: 'POST',
+        url: '/editTodos.html',
+        body:
+          "title=''"
+      }, res => {
+        should_be_redirected_to(res, '/editTodo.html');
+        should_not_have_cookie(res, 'message');
+      })
+    })
+  })
+  describe('POST /editTodo.html', () => {
+    it('redirects to homepage for after Editing Todo List', () => {
+      request(app, {
+        method: 'POST',
+        url: '/editTodo.html',
+        body:
+          "title=salman&description=dude&item1=1&item2=2&item3=3&item4=4&item5=5&item6=6&item7=7&item8=8&item9=9&item10=0"
+      }, res => {
+        should_be_redirected_to(res, '/homepage.html');
+        should_not_have_cookie(res, 'message');
       })
     })
   })
