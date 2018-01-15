@@ -18,3 +18,26 @@ td{
   text-align: left;
   min-width: 500px;
 }
+.subDiv{
+  display: inline-block;
+  margin:2%;
+}
+a{
+  padding:7px;
+  font-size: 30px;
+  color: black;
+  font-weight:normal;
+  text-decoration: none;
+  font-family: sans-serif;
+}
+.options{
+  margin:1%;
+  display: block;
+  height:140px;
+  width:140px;
+}
+.mainLogo{
+  height: 250px;
+  width:220px;
+  margin:1%;
+}
