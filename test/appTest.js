@@ -81,19 +81,7 @@ describe('app', () => {
         done();
       })
     })
-  })
-  describe('GET /editTodoItem.html', () => {
-    it('gives the editTodoItem page', done => {
-      request(app, {
-        method: 'GET',
-        url: '/editTodoItem.html'
-      }, res => {
-        status_is_ok(res);
-        content_type_is(res, 'text/html');
-        done();
-      })
-    })
-  })
+  }) 
   describe('GET /homepage.html', () => {
     it('gives the homepage page', done => {
       request(app, {
