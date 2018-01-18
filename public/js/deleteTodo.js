@@ -1,6 +1,6 @@
-let sendDataToServer=function(){
+let clearTodo=function(){
   let xhttp = new XMLHttpRequest();
-  xhttp.open("POST", "editTodo.html", true);
+  xhttp.open("POST", "deleteTodo.html", true);
   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   let date=document.getElementById('date');
   let title=document.getElementById('title');
