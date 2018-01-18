@@ -22,7 +22,7 @@ td{
   display: inline-block;
   margin:2%;
 }
-a{
+.menuItems{
   padding:7px;
   font-size: 30px;
   color: black;
@@ -40,4 +40,11 @@ a{
   height: 250px;
   width:220px;
   margin:1%;
+}
+.todos{
+  padding:5px 0px 5px 100px;
+  margin:1%;
+  font-family: sans-serif;
+  border-radius: 8px;
+  box-shadow: inset 0px 0px 20px darkGrey,5px 5px 10px darkGrey;
 }

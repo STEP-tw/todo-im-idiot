@@ -16,3 +16,11 @@ let sendDataToServer=function(){
   xhttp.send(postData);
   window.location.href="/homepage.html"
 }
+var counter=1;
+const addTextBox = function(divName) {
+  let newdiv = document.createElement('div');
+  let name=`item${counter}`;
+  newdiv.innerHTML = '<input type="text" name='+name+'>';
+  document.getElementById(divName).appendChild(newdiv);
+  counter++;
+}
