@@ -44,6 +44,21 @@ let handlers = {
     });
   }
 }
+let todoList = JSON.parse(fs.readFileSync('./data/todoList.json', 'utf8'));
+let requestFileHandler = (req, res) => {
+  console.log(utility.getGETRequests(req.url));
+  utility.sendRequestedFile(fs, req.url, res,'utf8');
+};
+let requestImageHandler = (req, res) => {
+  console.log(utility.getGETRequests(req.url));
+  utility.sendRequestedFile(fs, req.url, res);
+};
+const loginHandler = (req, res) => {
+  let fileData = utility.getRequestedFileData(fs, req.url, res).toString();
+  if (req.cookies.logInFailed) res.write(fileData.replace('LOGIN MESSAGE', 'LOGIN FAILED'));
+  else res.write(fileData.replace('LOGIN MESSAGE', ''));
+  res.end();
+};
 const logRequests = (req, res) => {
   let text = ['------------------------------',
     `${timeStamp()}`,
@@ -70,6 +85,44 @@ let redirectLoggedOutUserToLogin = (req, res) => {
   '/deleteTodo.html',
 ];
   if (req.urlIsOneOf(allUrls) && !req.user) res.redirect('/login.html');
+};
+
+const displayTodos = (req, res) => {
+  console.log(utility.getGETRequests(req.url));
+  let fileData = utility.getRequestedFileData(fs, '/displayTodos.html', res).toString();
+  let currentUserTodo=todoList[req.cookies.user];
+  if(currentUserTodo) fileData = fileData.replace('REPLACE ME', utility.getTodosInfoInBlocks[req.url](currentUserTodo));
+  else fileData = fileData.replace('REPLACE ME', 'NO TODOS');
+
+  utility.writeAndTerminate(res, fileData);
+};
+const editTodoHandler = (req, res) => {
+  console.log(utility.getGETRequests(req.url));
+  let fileData = utility.getRequestedFileData(fs, req.url, res).toString();
+  fileData = fileData.replace('REPLACE ME', utility.getTodoinBlock(currentTodo));
+  utility.writeAndTerminate(res, fileData);
+}
+const viewTodoHandler = (req, res) => {
+  console.log(utility.getGETRequests(req.url));
+  let fileData = utility.getRequestedFileData(fs, req.url, res).toString();
+  fileData = fileData.replace('REPLACE ME', utility.getTodoinReadOnlyBlock(currentTodo));
+  utility.writeAndTerminate(res, fileData);
+}
+const removeTodoHandler = (req, res) => {
+  console.log(utility.getGETRequests(req.url));
+  let fileData = utility.getRequestedFileData(fs, req.url, res).toString();
+  fileData = fileData.replace('REPLACE ME', utility.getTodoinReadOnlyBlock(currentTodo));
+  fileData = fileData.replace('</div>', '<input type="submit" value="DELETE" onclick="clearTodo()"></div>')
+  utility.writeAndTerminate(res, fileData);
+}
+const getSelectedTodo = (req, res) => {
+  console.log(utility.getPOSTRequests(req.url));
+  let title = Object.keys(req.body).join();
+  let currentUser = req.cookies.user;
+  let currentUserTodos = user.Todos;
+  currentUserTodos.forEach((element) => {
+    if (element.title == title) todo.setCurrentTodo(element);
+  });
 }
 let loadUser = (req, res) => {
   let sessionid = req.cookies.sessionid;
@@ -107,7 +160,6 @@ app.get('/image/view.jpg', serverHandlers.requestImageHandler);
 app.get('/image/delete.jpg', serverHandlers.requestImageHandler);
 app.get('/image/coreimage.jpg', serverHandlers.requestImageHandler);
 app.get('/image/favicon.ico', serverHandlers.requestImageHandler);
-
 app.get('/logout', (req, res) => {
   res.setHeader('Set-Cookie', `user='';Expires=${new Date(1).toUTCString()}`);
   res.redirect('/login.html');
@@ -172,6 +224,20 @@ app.post('/viewTodo.html', (req, res) => {
   let currentTodoIndex = todos.indexOf(todo.getCurrentTodo());
   todos[currentTodoIndex] = req.body;
   user.updateTodos(todos);
+});
+
+app.post('/editTodos.html', getSelectedTodo);
+app.post('/viewTodos.html', getSelectedTodo);
+app.post('/deleteTodos.html', getSelectedTodo);
+app.post('/viewTodo.html', (req, res) => {
+  console.log(utility.getPOSTRequests(req.url));
+  let date = " " + req.body.date + " ";
+  let todos = user.Todos;
+  todos.forEach(element => {
+    if (date == element.date) todo.setCurrentTodo(element);
+  });
+  let currentTodoIndex = todos.indexOf(todo.getCurrentTodo());
+  currentUserTodos[currentTodoIndex] = req.body;
 });
 app.post('/deleteTodo.html', (req, res) => {
   console.log(utility.getPOSTRequests(req.url));
